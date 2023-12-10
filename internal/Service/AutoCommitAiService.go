@@ -42,15 +42,16 @@ func (ac *AutoCommitAiService) Execute() error {
 
 		// ask the user what to do (1. commit, 2. ignore, 3. skip)
 		fmt.Println("What do you want to do with this file: " + file.GetPath() + "?")
-		if !file.IsDir() {
-			fmt.Println("1. Commit with auto message")
-		}
-		fmt.Println("2. Commit with custom message")
-		fmt.Println("3. Ignore")
-		fmt.Println("4. Skip")
 
 		var choice string
 		if len(ac.GetDefaultChoice()) <= 0 {
+			if !file.IsDir() {
+				fmt.Println("1. Commit with auto message")
+			}
+			fmt.Println("2. Commit with custom message")
+			fmt.Println("3. Ignore")
+			fmt.Println("4. Skip")
+
 			_, err = fmt.Scanln(&choice)
 			if err != nil {
 				return err
@@ -63,12 +64,15 @@ func (ac *AutoCommitAiService) Execute() error {
 		switch choice {
 		case "1":
 			if !file.IsDir() {
+				fmt.Println("Committing with auto message...")
 				var message string
 				message, err = autoCommitHelper.Commit(file)
 				if err != nil {
 					return err
 				}
+				fmt.Println("")
 				fmt.Println("Committed with message: " + message)
+				fmt.Println("")
 			}
 		}
 
