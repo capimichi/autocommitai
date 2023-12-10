@@ -52,26 +52,25 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 
 	prompt := ach.GetPrompt(file, diff)
 
-	var jsonPart string
-	for i := 0; i < 2; i++ {
-		response, err := ach.BardHelper.GetResponse(prompt)
-		if err != nil {
-			return "", err
-		}
-
-		jsonPart = ach.TextHelper.ExtractJson(response)
-		if jsonPart != "" {
-			break
-		}
-	}
-
-	if jsonPart == "" {
-		return "", nil
-	}
-
 	var commitMessage Model.CommitMessage
-	err = json.Unmarshal([]byte(jsonPart), &commitMessage)
-	if err != nil {
+	var jsonPart string
+	for i := 0; i < 3; i++ {
+		response, err := ach.BardHelper.GetResponse(prompt)
+
+		if(err == nil) {
+			jsonPart = ach.TextHelper.ExtractJson(response)
+
+			if(jsonPart != "") {
+				err = json.Unmarshal([]byte(jsonPart), &commitMessage)
+
+				if(err == nil) {
+					break
+				}
+			}
+		}
+	}
+
+	if(err != nil) {
 		return "", err
 	}
 
