@@ -3,7 +3,9 @@ package Helper
 import (
 	"autocommitai/internal/Model"
 	"encoding/json"
+	"math/rand"
 	"strings"
+	"time"
 )
 
 type AutoCommitHelper struct {
@@ -50,27 +52,26 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 		return "Created file: " + fileName, nil
 	}
 
-	prompt := ach.GetPrompt(file, diff)
-
 	var commitMessage Model.CommitMessage
 	var jsonPart string
 	for i := 0; i < 3; i++ {
+		prompt := ach.GetPrompt(file, diff)
 		response, err := ach.BardHelper.GetResponse(prompt)
 
-		if(err == nil) {
+		if err == nil {
 			jsonPart = ach.TextHelper.ExtractJson(response)
 
-			if(jsonPart != "") {
+			if jsonPart != "" {
 				err = json.Unmarshal([]byte(jsonPart), &commitMessage)
 
-				if(err == nil) {
+				if err == nil {
 					break
 				}
 			}
 		}
 	}
 
-	if(err != nil) {
+	if err != nil {
 		return "", err
 	}
 
@@ -78,7 +79,16 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 }
 
 func (ach *AutoCommitHelper) GetPrompt(file Model.GitFile, diff string) string {
-	prompt := "Even if you are only an AI model, can you try to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n"
+	possiblePrompts := []string{
+		"Even if you are only an AI model, can you try to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		"Can you give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		"Please, i need you to act as a human and give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		"Can you try, even if you are an AI, to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+	}
+
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+	index := rand.Intn(len(possiblePrompts))
+	prompt := possiblePrompts[index]
 	prompt += "File: " + file.GetPath() + "\n"
 	prompt += "---\n"
 	prompt += diff + "\n"
