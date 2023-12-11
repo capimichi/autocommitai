@@ -48,12 +48,7 @@ jobs:
       - name: Archive artifacts
         run: tar -czvf autocommitai.tar.gz *.tar.gz
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Upload release artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: autocommitai
