@@ -1,0 +1,42 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main  # adjust to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16  # adjust to your Go version
+
+      - name: Build for Linux
+        run: GOOS=linux GOARCH=amd64 go build -o myapp-linux-amd64 .
+
+      - name: Build for Windows
+        run: GOOS=windows GOARCH=amd64 go build -o myapp-windows-amd64.exe .
+
+      - name: Build for macOS
+        run: GOOS=darwin GOARCH=amd64 go build -o myapp-darwin-amd64 .
+
+      - name: Archive artifacts
+        run: tar -czvf myapp-$GITHUB_SHA.tar.gz myapp-*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: myapp-$GITHUB_SHA
+          path: myapp-*.tar.gz
