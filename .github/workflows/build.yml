@@ -19,16 +19,34 @@ jobs:
           go-version: 1.21
 
       - name: Build for Linux
-        run: GOOS=linux GOARCH=amd64 go build -o autocommitai-linux-amd64 .
+        run: GOOS=linux GOARCH=amd64 go build -o autocommitai .
+
+      - name: Create Linux tarball
+        run: tar czvf linux-amd64.tar.gz autocommitai
+
+      - name: Delete Linux binary
+        run: rm autocommitai
 
       - name: Build for Windows
-        run: GOOS=windows GOARCH=amd64 go build -o autocommitai-windows-amd64.exe .
+        run: GOOS=windows GOARCH=amd64 go build -o autocommitai .
+
+      - name: Create Windows tarball
+        run: tar czvf windows-amd64.tar.gz autocommitai.exe
+
+      - name: Delete Windows binary
+        run: rm autocommitai.exe
 
       - name: Build for macOS
-        run: GOOS=darwin GOARCH=amd64 go build -o autocommitai-darwin-amd64 .
+        run: GOOS=darwin GOARCH=amd64 go build -o autocommitai .
+
+      - name: Create macOS tarball
+        run: tar czvf darwin-amd64.tar.gz autocommitai
+
+      - name: Delete macOS binary
+        run: rm autocommitai
 
       - name: Archive artifacts
-        run: tar -czvf autocommitai-$GITHUB_SHA.tar.gz autocommitai-*
+        run: tar -czvf autocommitai.tar.gz *.tar.gz
 
   release:
     needs: build
@@ -38,5 +56,5 @@ jobs:
       - name: Upload release artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: autocommitai-$GITHUB_SHA
-          path: autocommitai-*.tar.gz
+          name: autocommitai
+          path: autocommitai.tar.gz
