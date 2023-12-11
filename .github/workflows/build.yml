@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - main  # adjust to your main branch name
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -16,19 +16,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16  # adjust to your Go version
+          go-version: 1.21
 
       - name: Build for Linux
-        run: GOOS=linux GOARCH=amd64 go build -o myapp-linux-amd64 .
+        run: GOOS=linux GOARCH=amd64 go build -o autocommitai-linux-amd64 .
 
       - name: Build for Windows
-        run: GOOS=windows GOARCH=amd64 go build -o myapp-windows-amd64.exe .
+        run: GOOS=windows GOARCH=amd64 go build -o autocommitai-windows-amd64.exe .
 
       - name: Build for macOS
-        run: GOOS=darwin GOARCH=amd64 go build -o myapp-darwin-amd64 .
+        run: GOOS=darwin GOARCH=amd64 go build -o autocommitai-darwin-amd64 .
 
       - name: Archive artifacts
-        run: tar -czvf myapp-$GITHUB_SHA.tar.gz myapp-*
+        run: tar -czvf autocommitai-$GITHUB_SHA.tar.gz autocommitai-*
 
   release:
     needs: build
@@ -38,5 +38,5 @@ jobs:
       - name: Upload release artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: myapp-$GITHUB_SHA
-          path: myapp-*.tar.gz
+          name: autocommitai-$GITHUB_SHA
+          path: autocommitai-*.tar.gz
