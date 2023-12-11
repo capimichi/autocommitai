@@ -28,7 +28,7 @@ jobs:
         run: rm autocommitai
 
       - name: Build for Windows
-        run: GOOS=windows GOARCH=amd64 go build -o autocommitai .
+        run: GOOS=windows GOARCH=amd64 go build -o autocommitai.exe .
 
       - name: Create Windows tarball
         run: tar czvf windows-amd64.tar.gz autocommitai.exe
