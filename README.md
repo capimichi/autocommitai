@@ -28,8 +28,6 @@ You can use these parameters when running the autocommitai command. For example:
 ./autocommitai --ignore-untracked=true --default-choice="1"
 ```
 
-## Parameters
-
 ## Structure
 
 The directory structure of the project is as follows:
