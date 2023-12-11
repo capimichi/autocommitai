@@ -68,6 +68,7 @@ func (ac *AutoCommitAiService) Execute() error {
 				var message string
 				message, err = autoCommitHelper.Commit(file)
 				if err != nil {
+
 					return err
 				}
 				fmt.Println("")
@@ -75,7 +76,10 @@ func (ac *AutoCommitAiService) Execute() error {
 				fmt.Println("")
 			}
 		}
+	}
 
+	if len(files) <= 0 {
+		fmt.Println("No files to commit")
 	}
 
 	return nil
