@@ -1,6 +1,6 @@
 module autocommitai
 
-go 1.21.5
+go 1.21
 
 require (
 	github.com/aquasecurity/gobard v0.0.0-20230829142038-80a30fb690c7
