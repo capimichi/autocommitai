@@ -7,14 +7,13 @@ import (
 )
 
 type DefaultConfig struct {
-
 }
 
-func NewDefaultConfig () *DefaultConfig {
+func NewDefaultConfig() *DefaultConfig {
 	return &DefaultConfig{}
 }
 
-func (c *DefaultConfig) InitConfig () error {
+func (c *DefaultConfig) InitConfig() error {
 
 	appName := c.GetAppName()
 
@@ -69,22 +68,34 @@ func (c *DefaultConfig) InitConfig () error {
 	return nil
 }
 
-func (c *DefaultConfig) GetAppName () string {
+func (c *DefaultConfig) GetAppName() string {
 	return "autocommitai"
 }
 
-func (c *DefaultConfig) GetPsidConfigKey () string {
+func (c *DefaultConfig) GetPsidConfigKey() string {
 	return "psid"
 }
 
-func (c *DefaultConfig) GetPsidtsConfigKey () string {
+func (c *DefaultConfig) GetPsidtsConfigKey() string {
 	return "psidts"
 }
 
-func (c *DefaultConfig) GetPsid () string {
+func (c *DefaultConfig) GetPsid() string {
 	return viper.GetString(c.GetPsidConfigKey())
 }
 
-func (c *DefaultConfig) GetPsidts () string {
+func (c *DefaultConfig) GetPsidts() string {
 	return viper.GetString(c.GetPsidtsConfigKey())
+}
+
+func (c *DefaultConfig) SetPsid(psid string) {
+	viper.Set(c.GetPsidConfigKey(), psid)
+}
+
+func (c *DefaultConfig) SetPsidts(psidts string) {
+	viper.Set(c.GetPsidtsConfigKey(), psidts)
+}
+
+func (c *DefaultConfig) Save() error {
+	return viper.WriteConfig()
 }
