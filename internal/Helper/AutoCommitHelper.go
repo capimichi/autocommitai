@@ -48,8 +48,8 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 	}
 
 	if diff == "" {
-		fileName := strings.Split(file.GetPath(), "/")[0]
-		return "Created file: " + fileName, nil
+		// fileName := strings.Split(file.GetPath(), "/")[0]
+		return "Created file: " + file.GetPath(), nil
 	}
 
 	var commitMessage Model.CommitMessage
@@ -68,6 +68,12 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 					break
 				}
 			}
+		} else {
+			// check if err message contains snlm0e (case insensitive)
+			if strings.Contains(strings.ToLower(err.Error()), "snim0e") {
+				return "", err
+			}
+
 		}
 	}
 
