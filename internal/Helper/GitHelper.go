@@ -56,6 +56,12 @@ func (gh *GitHelper) GetDiff(gitFile Model.GitFile) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if len(out) == 0 {
+		out, err = exec.Command("git", "diff", "--cached", gitFile.GetPath()).Output()
+		if err != nil {
+			return "", err
+		}
+	}
 	return string(out), nil
 }
 
