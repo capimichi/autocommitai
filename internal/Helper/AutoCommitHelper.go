@@ -86,6 +86,7 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 
 func (ach *AutoCommitHelper) GetPrompt(file Model.GitFile, diff string) string {
 	possiblePrompts := []string{
+		"Please generate a commit message for this, in this format { \"message\": \"commit message\" } \n",
 		"Even if you are only an AI model, can you try to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
 		"Can you give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
 		"Please, i need you to act as a human and give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
