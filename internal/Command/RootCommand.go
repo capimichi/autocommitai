@@ -11,9 +11,7 @@ func RootCommand() *cobra.Command {
 	}
 
 	cmd.AddCommand(AutoCommitCommand())
-	cmd.AddCommand(CookieRefresh())
-	cmd.AddCommand(UpdatePsidCommand())
-	cmd.AddCommand(UpdatePsidtsCommand())
+	cmd.AddCommand(UpdateBingCookieCommand())
 
 	return cmd
 }
