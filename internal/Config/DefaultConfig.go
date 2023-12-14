@@ -2,8 +2,9 @@ package Config
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"os"
+
+	"github.com/spf13/viper"
 )
 
 type DefaultConfig struct {
@@ -32,21 +33,13 @@ func (c *DefaultConfig) InitConfig() error {
 
 		fmt.Println("No configuration file found.")
 
-		fmt.Println("Please enter your PSID:")
-		var psid string
-		_, err := fmt.Scanln(&psid)
+		fmt.Println("Please enter your BingCookie:")
+		var bingCookie string
+		_, err := fmt.Scanln(&bingCookie)
 		if err != nil {
 			return err
 		}
-		viper.Set(c.GetPsidConfigKey(), psid)
-
-		fmt.Println("Please enter your PSIDTS:")
-		var psidts string
-		_, err = fmt.Scanln(&psidts)
-		if err != nil {
-			return err
-		}
-		viper.Set(c.GetPsidtsConfigKey(), psidts)
+		viper.Set(c.GetBingCookieConfigKey(), bingCookie)
 
 		if _, err := os.Stat(configDir); os.IsNotExist(err) {
 			err = os.Mkdir(configDir, 0755)
@@ -72,28 +65,16 @@ func (c *DefaultConfig) GetAppName() string {
 	return "autocommitai"
 }
 
-func (c *DefaultConfig) GetPsidConfigKey() string {
-	return "psid"
+func (c *DefaultConfig) GetBingCookieConfigKey() string {
+	return "bingCookie"
 }
 
-func (c *DefaultConfig) GetPsidtsConfigKey() string {
-	return "psidts"
+func (c *DefaultConfig) GetBingCookie() string {
+	return viper.GetString(c.GetBingCookieConfigKey())
 }
 
-func (c *DefaultConfig) GetPsid() string {
-	return viper.GetString(c.GetPsidConfigKey())
-}
-
-func (c *DefaultConfig) GetPsidts() string {
-	return viper.GetString(c.GetPsidtsConfigKey())
-}
-
-func (c *DefaultConfig) SetPsid(psid string) {
-	viper.Set(c.GetPsidConfigKey(), psid)
-}
-
-func (c *DefaultConfig) SetPsidts(psidts string) {
-	viper.Set(c.GetPsidtsConfigKey(), psidts)
+func (c *DefaultConfig) SetBingCookie(bingCookie string) {
+	viper.Set(c.GetBingCookieConfigKey(), bingCookie)
 }
 
 func (c *DefaultConfig) Save() error {
