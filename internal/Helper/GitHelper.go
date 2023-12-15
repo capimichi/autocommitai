@@ -44,8 +44,14 @@ func (gh *GitHelper) GetStatusFiles() ([]Model.GitFile, error) {
 	paths = filteredPaths
 	var filePaths []Model.GitFile
 	for _, path := range paths {
+		filePath := strings.TrimSpace(path[3:])
+		if strings.Contains(filePath, "->") {
+			parts := strings.Split(filePath, "->")
+			filePath = strings.TrimSpace(parts[len(parts)-1])
+		}
+
 		status := strings.TrimSpace(path[0:2])
-		gitFile := Model.GitFile{Path: path[3:], Status: status}
+		gitFile := Model.GitFile{Path: filePath, Status: status}
 		filePaths = append(filePaths, gitFile)
 	}
 	return filePaths, nil
