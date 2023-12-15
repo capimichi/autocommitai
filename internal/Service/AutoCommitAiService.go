@@ -76,6 +76,24 @@ func (ac *AutoCommitAiService) Execute() error {
 				fmt.Println("")
 			}
 		}
+
+		if choice == "2" {
+			fmt.Println("Committing with custom message...")
+			var message string
+			// ask message
+			fmt.Println("Please enter your commit message:")
+			_, err = fmt.Scanln(&message)
+			if err != nil {
+				return err
+			}
+
+			err = gitHelper.Commit(file, message)
+			if err != nil {
+				return err
+			}
+			fmt.Println("")
+		}
+
 	}
 
 	if len(files) <= 0 {
