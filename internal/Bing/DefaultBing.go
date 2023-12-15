@@ -35,9 +35,16 @@ func (db *DefaultBing) GetResponse(text string) (string, error) {
 
 	prompt := text
 	// replace new line with space
+	prompt = strings.Replace(prompt, "\\", " ", -1)
+	// replace new line with space
 	prompt = strings.Replace(prompt, "\n", " ", -1)
 	// replace ' with empty \'
-	prompt = strings.Replace(prompt, "'", "\\'", -1)
+	prompt = strings.Replace(prompt, "'", "", -1)
+
+	//set prompt max length to 500
+	if len(prompt) > 500 {
+		prompt = prompt[:500]
+	}
 
 	cmd := ep.PythonCmd("-c", `
 import asyncio
