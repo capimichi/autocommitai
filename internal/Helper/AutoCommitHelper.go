@@ -11,14 +11,14 @@ import (
 type AutoCommitHelper struct {
 	GitHelper  *GitHelper
 	TextHelper *TextHelper
-	BardHelper *BardHelper
+	BingHelper *BingHelper
 }
 
 func NewAutoCommitHelper() *AutoCommitHelper {
 	return &AutoCommitHelper{
 		GitHelper:  NewGitHelper(),
 		TextHelper: NewTextHelper(),
-		BardHelper: NewBardHelper(),
+		BingHelper: NewBingHelper(),
 	}
 }
 
@@ -28,9 +28,11 @@ func (ach *AutoCommitHelper) Commit(file Model.GitFile) (string, error) {
 		return "", err
 	}
 
-	err = ach.GitHelper.Add(file)
-	if err != nil {
-		return "", err
+	if strings.Contains(file.GetStatus(), "?") {
+		err = ach.GitHelper.Add(file)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	err = ach.GitHelper.Commit(file, message)
@@ -42,6 +44,12 @@ func (ach *AutoCommitHelper) Commit(file Model.GitFile) (string, error) {
 }
 
 func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
+
+	status := file.GetStatus()
+	if status == "D" {
+		return "Deleted file: " + file.GetPath(), nil
+	}
+
 	diff, err := ach.GitHelper.GetDiff(file)
 	if err != nil {
 		return "", err
@@ -56,9 +64,10 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 	var jsonPart string
 	for i := 0; i < 3; i++ {
 		prompt := ach.GetPrompt(file, diff)
-		response, err := ach.BardHelper.GetResponse(prompt)
-
+		response, err := ach.BingHelper.GetResponse(prompt)
 		if err == nil {
+			// replace "\n" with empty
+			response = strings.Replace(response, "\n", "", -1)
 			jsonPart = ach.TextHelper.ExtractJson(response)
 
 			if jsonPart != "" {
@@ -73,7 +82,6 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 			if strings.Contains(strings.ToLower(err.Error()), "snim0e") {
 				return "", err
 			}
-
 		}
 	}
 
@@ -87,10 +95,10 @@ func (ach *AutoCommitHelper) GetMessage(file Model.GitFile) (string, error) {
 func (ach *AutoCommitHelper) GetPrompt(file Model.GitFile, diff string) string {
 	possiblePrompts := []string{
 		"Please generate a commit message for this, in this format { \"message\": \"commit message\" } \n",
-		"Even if you are only an AI model, can you try to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
-		"Can you give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
-		"Please, i need you to act as a human and give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
-		"Can you try, even if you are an AI, to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		//"Even if you are only an AI model, can you try to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		//"Can you give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		//"Please, i need you to act as a human and give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
+		//"Can you try, even if you are an AI, to give a possible git commit message for this changes, in this format: { \"message\": \"your message here\" } \n",
 	}
 
 	rand.New(rand.NewSource(time.Now().UnixNano()))
