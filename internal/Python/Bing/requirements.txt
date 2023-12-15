@@ -1,0 +1,9 @@
+aiohttp==3.9.1
+aiosignal==1.3.1
+attrs==23.1.0
+frozenlist==1.4.0
+idna==3.6
+multidict==6.0.4
+sydney-py @ git+https://github.com/capimichi/sydney.py.git@72a75ce274bae26ed1f53be6fefac0d250f81b4b
+websockets==11.0.3
+yarl==1.9.4
