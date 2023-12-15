@@ -1,6 +1,9 @@
 package Model
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 type GitFile struct {
 	Path   string
@@ -10,7 +13,6 @@ type GitFile struct {
 func NewGitFile(path string, status string) *GitFile {
 	return &GitFile{Path: path, Status: status}
 }
-
 
 func (gf *GitFile) IsDir() bool {
 	filePath := gf.Path
@@ -30,5 +32,6 @@ func (gf *GitFile) GetPath() string {
 }
 
 func (gf *GitFile) GetStatus() string {
-	return gf.Status
+	v := strings.TrimSpace(gf.Status)
+	return v
 }
