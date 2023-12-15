@@ -53,7 +53,7 @@ func AutoCommitCommand() *cobra.Command {
 	}
 
 	cmd.Flags().Bool(ignoreUntrackedKey, false, "Ignore untracked files when committing")
-	cmd.Flags().String(defaultChoiceKey, "", "Default choice for commit message (1. commit, 2. commit with custom message, 3. ignore, 4. skip)")
+	cmd.Flags().String(defaultChoiceKey, "", "Default choice for commit message (1. commit, 2. skip)")
 
 	return cmd
 }
